@@ -7,14 +7,18 @@ router.post('/registration', function(req, res, next) {
  
   const phone = req.body.phone || "";
   const gender = req.body.gender || "unknown";
-  const age = req.body.age || "";
   const showerPref = req.body.showerPref || "morning";
+  const breakfast = req.body.breakfast;
+  const lunch = req.body.lunch;
+  const dinner = req.body.dinner;
 
   const userDict = {
     phone,
     gender,
-    age,
-    showerPref
+    showerPref,
+    breakfast,
+    lunch,
+    dinner
   }
   
   const user = new User(userDict);
