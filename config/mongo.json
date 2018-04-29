@@ -1,0 +1,13 @@
+{
+  "development": {
+    "database": "homeless_sms_development",
+    "host": "localhost"
+  },
+  "test": {
+    "database": "homeless_sms_test",
+    "host": "localhost"
+  },
+  "production": {
+    "use_env_variable": "MONGODB_URI"
+  }
+}
