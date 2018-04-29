@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let UserSchema = new Schema({
-  email: {
-    type: String,
-  },
-  passHash: {
+  phone: {
     type: String,
   }
 });
