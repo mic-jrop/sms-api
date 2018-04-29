@@ -1,46 +1,36 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const MessageResponse = require('twilio').twiml.MessagingResponse;
-var textSender = require('../app/textSender.js');
-const returnSchedule = require('../returnSchedule');
+const textSender = require('../app/textSender.js');
 
 /* GET users listing. */
-router.post('/:userPhone', function(req, res, next) {
-
-  const userPhone = req.params.userPhone;
+router.post('/', function(req, res, next) {
+  const userPhone = req.body.From;
   const textContent = req.body.Body;
-  const timestamp = new Date().toISOString();
 
-  let responseText = "unknown";
-  switch(textContent) {
-    case textContent.toLowerCase() === "hello":
+  let responseText = `
+      To get a basic needs schedule, text us the address closest to where you are, like this:\n
+      1600 Dumbarton Circle
+      `;
+  switch (textContent.toLowerCase()) {
+    case 'hello':
       responseText = `
-      Hello there, and welcome to our service. To get a basic needs schedule, text us the closet address to where you are, like this: \n
-      \n
-
-      address 1600 Dumbarton Circle'
+      Hello there, and welcome to our service. To get a basic needs schedule, text us the closest address to where you are, like this:\n
+      1600 Dumbarton Circle
       `;
       break;
-    case textContent.toLowerCase() === 'help':
+    case 'help':
       responseText = `
-      To get a basic needs schedule, text us the closet address to where you are, like this: \n
-      \n
-
-      address 1600 Dumbarton Circle'
+      We'd be happy to give you a call if you would like some assistance. Just text back with:\n
+      Give me a call
       `;
-    case !!textContent.match(/address.*/g):
-      let address = textContent
-        .match(/address.*/g)
-        .slice(8);
-      responseText = returnSchedule(address, userPhone);
-    case:
-      responseText = new Date().toDateString();
-      break;
+    case `140 turk st`:
+      responseText = `(1) Breakfast: 8am - 9am\nTenderloin Services\n330 Ellis Street, San Francisco, CA 94102\n\n(2) Lunch: 11:30 to 1:30 pm\nSt. Anthony's Dining Room\n121 Golden Gate Avenue San Francisco, CA 94102\n\n(3) Showers: Episcopal Community Services\n24-hour shelter for adults (334 beds with separate sections for men and women) 2 meals daily (breakfast and dinner) Showers Laundry services (detergent not provided) Nurse Monday-Friday Free wifi Case manager to assist with locating housing and obtaining medical\n\n(4) Dinner:  5pm - 7pm\nMother Brown's Dining Room\n2111 Jennings St, San Francisco, CA 94124`;
     default:
       break;
   }
 
-  textSender.sendSMS(fromNumber, responseText);
+  textSender.sendSMS(userPhone, responseText);
 
   res.setHeader('Content-Type', 'application/json');
 
